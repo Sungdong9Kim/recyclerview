@@ -3,9 +3,15 @@ package com.example.recycleview;
 import android.graphics.drawable.Drawable;
 
 public class RecyclerItem {
-    private Drawable iconDrawable;
-    private String titleStr;
-    private String descStr;
+    Drawable iconDrawable;
+    String titleStr;
+    String descStr;
+
+    public RecyclerItem(Drawable drawable, String box, String s) {
+        iconDrawable = drawable;
+        titleStr = box;
+        descStr = s;
+    }
 
     //아래의 set과 get을 하는 이유는 위의 정의된 값들이 private이기 때문에 recyclerItem 내에서만 수정할 수 있기 때문입니다.
     public void setIcon(Drawable icon) {

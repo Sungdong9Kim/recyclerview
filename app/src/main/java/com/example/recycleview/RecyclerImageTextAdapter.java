@@ -1,6 +1,7 @@
 package com.example.recycleview;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,35 +14,18 @@ import java.util.ArrayList;
 
 public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImageTextAdapter.ViewHolder> {
 
-    private ArrayList<RecyclerItem> mData = null;
+    Context context;
+    private ArrayList<RecyclerItem> mData = new ArrayList<RecyclerItem>();
 
-    RecyclerImageTextAdapter(ArrayList<RecyclerItem> list) {
-        mData = list;
-    }
+    OnItemClickListener listener;
 
-    @Override
-    public RecyclerImageTextAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        Context context = parent.getContext();
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view = inflater.inflate(R.layout.recycler_item, parent, false);
-        RecyclerImageTextAdapter.ViewHolder vh = new RecyclerImageTextAdapter.ViewHolder(view);
-
-        return vh;
+    public static interface OnItemClickListener {
+        public void onItemClick(ViewHolder holder, View view, int position);
 
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerImageTextAdapter.ViewHolder holder, int position){
-
-        RecyclerItem item = mData.get(position);
-
-        holder.icon.setImageDrawable(item.getIcon());
-        holder.title.setText(item.getTitle());
-        holder.desc.setText(item.getDesc());
-
-
+    public RecyclerImageTextAdapter(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -49,10 +33,45 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         return mData.size();
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.recycler_item, parent, false);
+
+        return new ViewHolder(view);
+
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position){
+
+        RecyclerItem item = mData.get(position);
+        holder.setItem(item);
+
+        holder.setOnItemClickListener(listener);
+    }
+
+    public void addItem(RecyclerItem item) {
+        mData.add(item);
+    }
+
+    public RecyclerItem getItem(int position) {
+        return mData.get(position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         ImageView icon;
         TextView title;
         TextView desc;
+
+        OnItemClickListener listener;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -61,7 +80,29 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
             title = itemView.findViewById(R.id.title);
             desc = itemView.findViewById(R.id.desc);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(listener != null) {
+                        listener.onItemClick(ViewHolder.this, view, position);
+                    }
+
+                }
+            });
+
         }
+        public void setItem(RecyclerItem item) {
+            icon.setImageDrawable(item.getIcon());
+            title.setText(item.getTitle());
+            desc.setText(item.getDesc());
+        }
+
+        public void setOnItemClickListener(OnItemClickListener listener) {
+            this.listener = listener;
+        }
+
+
     }
 
 }
