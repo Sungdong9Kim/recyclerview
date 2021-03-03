@@ -146,10 +146,11 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = (int) v.getTag();
-                    Toast.makeText(v.getContext(), "Clicked button at position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    int pos = getAdapterPosition();
+                    //Toast.makeText(v.getContext(), "Clicked button at position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
                     mData.remove(pos);
                     notifyDataSetChanged();
+                    listener.onItemClick(ViewHolder.this, v, pos);
                 }
             });
 
