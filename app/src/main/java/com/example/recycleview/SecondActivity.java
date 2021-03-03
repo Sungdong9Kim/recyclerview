@@ -45,6 +45,14 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        mAdapter.setDeleteButtonListener(new RecyclerImageTextAdapter.OnDeleteButtonItemClickListener() {
+            @Override
+            public void onDeleteIsClick(View button, int position) {
+                RecyclerItem item = mList.get(position);
+                Toast.makeText(getApplicationContext(), "hihihihihihi", Toast.LENGTH_LONG);
+            }
+        });
+
     }
 
 }

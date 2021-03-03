@@ -2,11 +2,14 @@ package com.example.recycleview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +21,10 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
     private ArrayList<RecyclerItem> mData = new ArrayList<RecyclerItem>();
 
     OnItemClickListener listener;
+
+    View.OnClickListener clickListener;
+
+    OnDeleteButtonItemClickListener deleteButtonListener;
 
     public static interface OnItemClickListener {
         public void onItemClick(ViewHolder holder, View view, int position);
@@ -50,6 +57,46 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         holder.setItem(item);
 
         holder.setOnItemClickListener(listener);
+
+
+        holder.itemView.setOnClickListener(clickListener);
+
+        /*
+        if(deleteButtonListener != null) {
+
+            ViewHolder myHolder = (ViewHolder) holder;
+            myHolder.getDeleteButton().setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    deleteButtonListener.onDeleteIsClick(v, position);
+                }
+            });
+
+        }*/
+    }
+
+    //Handling button click in RecyclerView adapter?
+
+    public static class MyHolder extends RecyclerView.ViewHolder {
+        private final Button deleteButton;
+
+        public MyHolder(View itemView) {
+            super(itemView);
+
+            deleteButton = (Button) itemView.findViewById(R.id.doneButton);
+        }
+
+        public Button getDeleteButton() {
+            return deleteButton;
+        }
+    }
+
+    public interface OnDeleteButtonItemClickListener {
+        void onDeleteIsClick(View button, int position);
+    }
+
+    public void setDeleteButtonListener(OnDeleteButtonItemClickListener deleteButtonListener){
+        this.deleteButtonListener = deleteButtonListener;
     }
 
     public void addItem(RecyclerItem item) {
@@ -72,6 +119,9 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         TextView desc;
 
         OnItemClickListener listener;
+        OnDeleteButtonItemClickListener deleteButtonListener;
+
+        private final Button deleteButton;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -80,18 +130,35 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
             title = itemView.findViewById(R.id.title);
             desc = itemView.findViewById(R.id.desc);
 
+            deleteButton = (Button) itemView.findViewById(R.id.doneButton);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     if(listener != null) {
                         listener.onItemClick(ViewHolder.this, view, position);
+
                     }
 
                 }
             });
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = (int) v.getTag();
+                    Toast.makeText(v.getContext(), "Clicked button at position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    mData.remove(pos);
+                    notifyDataSetChanged();
+                }
+            });
 
         }
+
+        public Button getDeleteButton() {
+            return deleteButton;
+        }
+
         public void setItem(RecyclerItem item) {
             icon.setImageDrawable(item.getIcon());
             title.setText(item.getTitle());
@@ -100,6 +167,10 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
 
         public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
+        }
+
+        public void setDeleteButtonListener(OnDeleteButtonItemClickListener deleteButtonListener){
+            this.deleteButtonListener = deleteButtonListener;
         }
 
 
