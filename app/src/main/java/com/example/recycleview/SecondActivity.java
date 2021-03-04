@@ -3,6 +3,7 @@ package com.example.recycleview;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +46,17 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+        Button deletebutton = (Button) findViewById(R.id.doneButton);
+
+        /*
+        deletebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "hihihihihihi", Toast.LENGTH_LONG);
+            }
+        });*/
+
+
         mAdapter.setDeleteButtonListener(new RecyclerImageTextAdapter.OnDeleteButtonItemClickListener() {
             @Override
             public void onDeleteIsClick(View button, int position) {
@@ -52,7 +64,6 @@ public class SecondActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "hihihihihihi", Toast.LENGTH_LONG);
             }
         });
-
     }
 
 }

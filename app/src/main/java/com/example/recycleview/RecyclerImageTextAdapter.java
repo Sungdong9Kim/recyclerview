@@ -59,7 +59,23 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
         holder.setOnItemClickListener(listener);
 
 
-        holder.itemView.setOnClickListener(clickListener);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(holder, v, position);
+            }
+        });
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Toast.makeText(v.getContext(), "Clicked button at position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                mData.remove(position);
+                notifyDataSetChanged();
+
+            }
+        });
 
         /*
         if(deleteButtonListener != null) {
@@ -132,6 +148,7 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
 
             deleteButton = (Button) itemView.findViewById(R.id.doneButton);
 
+            /*
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -152,7 +169,7 @@ public class RecyclerImageTextAdapter extends RecyclerView.Adapter<RecyclerImage
                     notifyDataSetChanged();
                     listener.onItemClick(ViewHolder.this, v, pos);
                 }
-            });
+            });*/
 
         }
 
